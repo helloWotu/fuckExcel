@@ -1,23 +1,34 @@
 import json
+import pandas as pd
 
-
-filePath1 = r'C:\Users\tuzy\Downloads\10696049123054397_s.csv'
+dir_paths = r'C:\Users\tuzy\Documents\WeChat Files\tzyyyzyyq\FileStorage\File\2022-04\新建文件夹\新建文件夹\充值TOP10送谁最多？\有问题的\\'
+file_name = r'gift_history_20220429130433'
 mp = {}
 
-def csvTojsonDic(filePath):
-    f = open(filePath, "r", encoding='utf-8')  #
-    ls = []
-    for line in f:
-        line = line.replace("\n", "")
-        ls.append(line.split(","))
+def csvTojsonDic():
+    file_path = dir_paths + file_name + '.csv'
+    df = pd.read_csv(file_path)
+    json_path = dir_paths + file_name + '.json'
+    df.to_json(json_path, orient='records', force_ascii=False)
 
-    f.close()
-    for i in range(1, len(ls)):
-        ls[i] = dict(zip(ls[0], ls[i]))
-    json_string = json.dumps(ls[1:], sort_keys=True, indent=4, ensure_ascii=False)
-    dictJson = json.loads(json_string)
-    # print(len(dictJson))
-    return dictJson
+    with open(json_path, 'r', encoding='utf-8') as f:
+        dictJson = json.loads(f.read())
+        return dictJson
+
+
+    # f = open(filePath, "r", encoding='utf-8')  #
+    # ls = []
+    # for line in f:
+    #     line = line.replace("\n", "")
+    #     ls.append(line.split(","))
+    #
+    # f.close()
+    # for i in range(1, len(ls)):
+    #     ls[i] = dict(zip(ls[0], ls[i]))
+    # json_string = json.dumps(ls[1:], sort_keys=True, indent=4, ensure_ascii=False)
+    # dictJson = json.loads(json_string)
+    # # print(len(dictJson))
+    # return dictJson
     # print(len(json_string))
 
 def findHighterSocre(dicts):
@@ -48,9 +59,11 @@ def findNeedInfos(dicts):
             break
 
 
-jsonDict = csvTojsonDic(filePath1)
+jsonDict = csvTojsonDic()
 findHighterSocre(jsonDict)
 mp = sorted(mp.items(), key=lambda x: x[1], reverse=True)
 findNeedInfos(jsonDict)
+
+
 
 

@@ -3,6 +3,11 @@ import os
 import json
 import pandas as pd
 
+paths = os.getcwd()
+# paths = r'C:\Users\tuzy\Documents\WeChat Files\tzyyyzyyq\FileStorage\File\2022-04'
+# paths = r'C:\Users\tuzy\Documents\WeChat Files\tzyyyzyyq\FileStorage\File\2022-04\新建文件夹\新建文件夹\充值TOP10送谁最多？'
+# paths = r'C:\Users\tuzy\Documents\WeChat Files\tzyyyzyyq\FileStorage\File\2022-04\新建文件夹\新建文件夹\充值TOP10送谁最多？\有问题的'
+
 # 将所有文件的路径放入到listcsv列表中
 def list_dir(file_dir):
     # list_csv = []
@@ -19,10 +24,15 @@ def list_dir(file_dir):
             # print(os.path.join(file_dir, cur_file))
             # print(csv_file)
             list_csv.append(csv_file)
-        # if os.path.isdir(path):
-        #     # print("{0} : is dir".format(cur_file))
-        #     # print(os.path.join(file_dir, cur_file))
-        #     list_dir(path)
+
+        if os.path.splitext(path)[1] == '.json':
+            json_file = os.path.join(file_dir, cur_file)
+            os.remove(json_file)
+
+        if os.path.isdir(path):
+            # print("{0} : is dir".format(cur_file))
+            # print(os.path.join(file_dir, cur_file))
+            list_dir(path)
     return list_csv
 
 def findSenderOrRever(jsonDic):
@@ -57,20 +67,15 @@ def findSenderOrRever(jsonDic):
 
 
 def csvTojsonDic(filePath):
-    f = open(filePath, "r", encoding='utf-8')  #
-    ls = []
-    for line in f:
-        line = line.replace("\n", "")
-        ls.append(line.split(","))
 
-    f.close()
-    for i in range(1, len(ls)):
-        ls[i] = dict(zip(ls[0], ls[i]))
-    json_string = json.dumps(ls[1:], sort_keys=True, indent=4, ensure_ascii=False)
-    dictJson = json.loads(json_string)
-    # print(len(dictJson))
-    return dictJson
-    # print(len(json_string))
+    df = pd.read_csv(filePath)
+    json_path = paths + '\\temp.json'
+    df.to_json(json_path, orient='records', force_ascii=False)
+
+    with open(json_path, 'r', encoding='utf-8') as f:
+        dictJson = json.loads(f.read())
+        return dictJson
+
 
 def findHighterSocre(dicts, mp, issender):
     if issender == 'isSender':
@@ -106,6 +111,7 @@ def findHighterSocre(dicts, mp, issender):
 
 
 sender_list = []
+recver_list = []
 
 
 def findNeedInfos(dicts, mp, issender):
@@ -135,6 +141,8 @@ def findNeedInfos(dicts, mp, issender):
                 sender_uid = dic['1']
                 sender_name = dic['2']
                 rever_sore = mp[0][1]
+                recver_list.append([rever_uid, rever_name, rever_sore, sender_uid, sender_name])
+
                 print(
                     f'收礼人<<<<<<<<<<找到最高充值的了！\n 送礼人uid：{sender_uid} ,送礼人name is：{sender_name},\n 收礼人uid is:{rever_uid}, name is :{rever_name},\n 累计送出金额是：{rever_sore}')
                 print('----------------------------------------------------------------------------')
@@ -148,9 +156,9 @@ def long_num_str(data):
     return data
 
 if __name__ == '__main__':
-    paths = os.getcwd()
     list_csv = []
     list_dir(file_dir=paths)
+
     for filePath in list_csv:
         mp = {}
         jsonDict = csvTojsonDic(filePath)
@@ -164,8 +172,14 @@ if __name__ == '__main__':
         df = pd.DataFrame(sender_list, columns=columns)
         df['收礼人uid'] = df['收礼人uid'].map(long_num_str)
         df['送礼人uid'] = df['送礼人uid'].map(long_num_str)
-        sender_path = paths + '/sender.csv'
+        sender_path = paths + '/送礼人（土豪送给谁最多）.csv'
         df.to_csv(sender_path)
+
+        df_rec = pd.DataFrame(recver_list, columns=columns)
+        df_rec['收礼人uid'] = df['收礼人uid'].map(long_num_str)
+        df_rec['送礼人uid'] = df['送礼人uid'].map(long_num_str)
+        recver_path = paths + '/收礼人（谁送给土豪最多）.csv'
+        df.to_csv(recver_path)
 
         # print(df)
 
