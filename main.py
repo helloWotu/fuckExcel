@@ -2,6 +2,7 @@
 import os
 import json
 import pandas as pd
+import recverPase
 
 paths = os.getcwd()
 # paths = r'C:\Users\tuzy\Documents\WeChat Files\tzyyyzyyq\FileStorage\File\2022-04'
@@ -156,30 +157,33 @@ def long_num_str(data):
     return data
 
 if __name__ == '__main__':
-    list_csv = []
-    list_dir(file_dir=paths)
 
-    for filePath in list_csv:
-        mp = {}
-        jsonDict = csvTojsonDic(filePath)
-        issender = findSenderOrRever(jsonDict)
-        # print(rest)
-        findHighterSocre(jsonDict, mp, issender)
-        mp = sorted(mp.items(), key=lambda x: x[1], reverse=True)
-        findNeedInfos(jsonDict, mp, issender)
-
-        columns = ['收礼人uid', '收礼人名字', '收礼总金额', '送礼人uid', '送礼人名字']
-        df = pd.DataFrame(sender_list, columns=columns)
-        df['收礼人uid'] = df['收礼人uid'].map(long_num_str)
-        df['送礼人uid'] = df['送礼人uid'].map(long_num_str)
-        sender_path = paths + '/送礼人（土豪送给谁最多）.csv'
-        df.to_csv(sender_path)
-
-        df_rec = pd.DataFrame(recver_list, columns=columns)
-        df_rec['收礼人uid'] = df['收礼人uid'].map(long_num_str)
-        df_rec['送礼人uid'] = df['送礼人uid'].map(long_num_str)
-        recver_path = paths + '/收礼人（谁送给土豪最多）.csv'
-        df.to_csv(recver_path)
+    ret = recverPase.getFirstSored('gift_history_20220424024233.csv')
+    print(ret)
+    # list_csv = []
+    # list_dir(file_dir=paths)
+    #
+    # for filePath in list_csv:
+    #     mp = {}
+    #     jsonDict = csvTojsonDic(filePath)
+    #     issender = findSenderOrRever(jsonDict)
+    #     # print(rest)
+    #     findHighterSocre(jsonDict, mp, issender)
+    #     mp = sorted(mp.items(), key=lambda x: x[1], reverse=True)
+    #     findNeedInfos(jsonDict, mp, issender)
+    #
+    #     columns = ['收礼人uid', '收礼人名字', '收礼总金额', '送礼人uid', '送礼人名字']
+    #     df = pd.DataFrame(sender_list, columns=columns)
+    #     df['收礼人uid'] = df['收礼人uid'].map(long_num_str)
+    #     df['送礼人uid'] = df['送礼人uid'].map(long_num_str)
+    #     sender_path = paths + '/送礼人（土豪送给谁最多）.csv'
+    #     df.to_csv(sender_path)
+    #
+    #     df_rec = pd.DataFrame(recver_list, columns=columns)
+    #     df_rec['收礼人uid'] = df['收礼人uid'].map(long_num_str)
+    #     df_rec['送礼人uid'] = df['送礼人uid'].map(long_num_str)
+    #     recver_path = paths + '/收礼人（谁送给土豪最多）.csv'
+    #     df.to_csv(recver_path)
 
         # print(df)
 
