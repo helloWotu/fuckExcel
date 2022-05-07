@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 
 '''
-作为送礼人分析收礼人分析，   土豪送给谁最多
+作为收礼人分析送礼人分析，   谁送给土豪最多
 '''
 
 def getFirstSored(file_path):
     df = pd.read_csv(file_path)
+    if df.shape[1] < 10:
+        return []
     # for rows_i in range(1, df.)
 
     # 查看有多少行
@@ -17,13 +19,10 @@ def getFirstSored(file_path):
 
     # print(df.loc[1][2])
 
-    if df.shape[1] < 10:
-        return []
-
     is_sender = True
-    recver_id = df.loc[1][1]
+    recver_id = df.loc[1][3]
     for row_i in range(2, df.shape[0]):
-        this_recver_id = df.loc[row_i][1]
+        this_recver_id = df.loc[row_i][3]
         if recver_id != this_recver_id:
             is_sender = False
             break
@@ -31,12 +30,9 @@ def getFirstSored(file_path):
     if is_sender == False:
         return []
 
-
-    rec_id_set = set()
+    send_id_set = set()
     all_recver = []
     for row_i in range(1, df.shape[0]):
-        # for col_i in range(0, df.shape[1]):
-        #     nums = df.loc[row_i][col_i]
         send_id = df.loc[row_i][1]
         send_name = df.loc[row_i][2]
         rec_id = df.loc[row_i][3]
@@ -50,11 +46,11 @@ def getFirstSored(file_path):
             'rec_core': rec_core
         }
         all_recver.append(recver)
-        rec_id_set.add(rec_id)
+        send_id_set.add(send_id)
 
     # 计算总金币
     sum_list = []
-    for this_rec_id in rec_id_set:
+    for this_send_id in send_id_set:
         rec_core = 0
         rec_name = ''
         rec_id = ''
@@ -62,7 +58,7 @@ def getFirstSored(file_path):
         send_name = ''
         # 遍历算出当前rec_id 所有的总金币
         for one_recv in all_recver:
-            if one_recv['rec_id'] == this_rec_id:
+            if one_recv['send_id'] == this_send_id:
                 rec_core += int(one_recv['rec_core'])
                 rec_name = one_recv['rec_name']
                 rec_id = one_recv['rec_id']
