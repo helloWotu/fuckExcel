@@ -4,7 +4,8 @@ import pandas as pd
 import recverPase
 import senderPase
 
-paths = os.getcwd()
+# paths = os.getcwd()
+paths = r'C:\Users\tuzy\Downloads\5.19充值TOP10送谁最多'
 columns = ['送礼人ID', '送礼人名字', '收礼人ID', '收礼人名字', '送礼总金额']
 
 # 将所有文件的路径放入到listcsv列表中

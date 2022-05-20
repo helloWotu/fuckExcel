@@ -20,9 +20,9 @@ def getFirstSored(file_path):
     # print(df.loc[1][2])
 
     is_sender = True
-    recver_id = df.loc[1][3]
+    recver_id = df.loc[1][4]
     for row_i in range(2, df.shape[0]):
-        this_recver_id = df.loc[row_i][3]
+        this_recver_id = df.loc[row_i][4]
         if recver_id != this_recver_id:
             is_sender = False
             break
@@ -35,9 +35,9 @@ def getFirstSored(file_path):
     for row_i in range(1, df.shape[0]):
         send_id = df.loc[row_i][1]
         send_name = df.loc[row_i][2]
-        rec_id = df.loc[row_i][3]
-        rec_name = df.loc[row_i][4]
-        rec_core = df.loc[row_i][8]
+        rec_id = df.loc[row_i][4]
+        rec_name = df.loc[row_i][5]
+        rec_core = df.loc[row_i][10]
         recver = {
             'send_id': send_id,
             'send_name': send_name,

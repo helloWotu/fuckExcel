@@ -39,9 +39,9 @@ def getFirstSored(file_path):
         #     nums = df.loc[row_i][col_i]
         send_id = df.loc[row_i][1]
         send_name = df.loc[row_i][2]
-        rec_id = df.loc[row_i][3]
-        rec_name = df.loc[row_i][4]
-        rec_core = df.loc[row_i][8]
+        rec_id = df.loc[row_i][4]
+        rec_name = df.loc[row_i][5]
+        rec_core = df.loc[row_i][10]
         recver = {
             'send_id': send_id,
             'send_name': send_name,
@@ -79,7 +79,7 @@ def getFirstSored(file_path):
         sum_list.append(sum_rec)
         sum_list = sorted(sum_list, key=lambda x: x['送礼总金额'], reverse=True)
 
-    # print(sum_list)
+    print(sum_list)
 
     # df = pd.DataFrame(sum_list)
     # # 根据最高分数排序
