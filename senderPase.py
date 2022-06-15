@@ -82,3 +82,8 @@ def getFirstSored(file_path):
     # df = df.sort_values(by=['送礼金额'], ascending=False)
     # df.to_csv('送礼统计.csv')
     return sum_list
+
+
+'''
+作为收礼人分析送礼人情况，   谁送给土豪最多，
+'''
