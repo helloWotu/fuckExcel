@@ -4,8 +4,12 @@ import numpy as np
 '''
 作为送礼人分析收礼人分析，   土豪送给谁最多
 '''
+file_idx = 0
 
 def getFirstSored(file_path):
+
+
+    print('file_path:%s index:%d\n' % (file_path, file_idx))
     df = pd.read_csv(file_path)
     # for rows_i in range(1, df.)
 
@@ -79,7 +83,6 @@ def getFirstSored(file_path):
         sum_list.append(sum_rec)
         sum_list = sorted(sum_list, key=lambda x: x['送礼总金额'], reverse=True)
 
-    print(sum_list)
 
     # df = pd.DataFrame(sum_list)
     # # 根据最高分数排序
@@ -93,7 +96,15 @@ def getFirstSored(file_path):
 '''
 
 def getTuHaoSendScene(file_path):
+    global file_idx
+    file_idx += 1
+    print('file_path:%s index:%d\n' % (file_path, file_idx))
+
     df = pd.read_csv(file_path)
+
+    first_title = df.loc[0][0]
+    if first_title != 'ID':
+        return
 
     is_sender = True
     recver_id = df.loc[1][1]
@@ -156,7 +167,6 @@ def getTuHaoSendScene(file_path):
             '送礼总金额': rec_core
         }
         sum_list.append(sum_rec)
-        sum_list = sorted(sum_list, key=lambda x: x['送礼总金额'], reverse=True)
 
     # print(sum_list)
 
@@ -164,7 +174,48 @@ def getTuHaoSendScene(file_path):
     # # 根据最高分数排序
     # df = df.sort_values(by=['送礼金额'], ascending=False)
     # df.to_csv('送礼统计.csv')
-    return sum_list
+    sum_list = sorted(sum_list, key=lambda x: x['送礼总金额'], reverse=True)
+
+    first_item = sum_list[0]
+    tuhao_uid = first_item['送礼人ID']
+    tuhao_name = first_item['送礼人名字']
+    most_sence_name = first_item['场景名字']
+    sence_ktv_core = 0
+    sence_zhibo_core = 0
+    sence_zuoping_core = 0
+    sence_sixing_core = 0
+    sence_qinmi_core = 0
+    sence_other_core = 0
+    sence_other_name = ''
+
+    for dic_item in sum_list:
+        if dic_item['场景名字'] == 'KTV':
+            sence_ktv_core = dic_item['送礼总金额']
+        elif dic_item['场景名字'] == '直播':
+            sence_zhibo_core = dic_item['送礼总金额']
+        elif dic_item['场景名字'] == '作品':
+            sence_zuoping_core = dic_item['送礼总金额']
+        elif dic_item['场景名字'] == '私信':
+            sence_sixing_core = dic_item['送礼总金额']
+        elif dic_item['场景名字'] == '亲密关系':
+            sence_qinmi_core = dic_item['送礼总金额']
+        else:
+            sence_other_name = dic_item['场景名字']
+            sence_other_core = dic_item['送礼总金额']
+
+    column_names = ['土豪uid', '土豪送礼最多的场景', '场景A（KTV）', '场景B（直播）', '场景C（作品）', '场景D（私信）', '场景E（亲密关系）', '其他场景']
+    column_data = {
+        column_names[0]: tuhao_uid,
+        column_names[1]: most_sence_name,
+        column_names[2]: sence_ktv_core,
+        column_names[3]: sence_zhibo_core,
+        column_names[4]: sence_zuoping_core,
+        column_names[5]: sence_sixing_core,
+        column_names[6]: sence_qinmi_core,
+        column_names[7]: sence_other_core
+    }
+
+    return column_data
 
 
 def findIdxOfKey(key, arrar):
@@ -180,9 +231,12 @@ def findValus(df, row_i, key, arrar):
     return value
 
 
-file_path = 'changjing.csv'
-sun_list = getTuHaoSendScene(file_path)
-print(sun_list)
-df_save = pd.DataFrame(sun_list)
-save_path = '/Users/tuzhaoyang/Desktop/blecrash' + '/export.csv'
-df_save.to_csv(save_path, encoding='utf_8_sig')
+# file_path = '/Users/tuzhaoyang/Desktop/blecrash/充值TOP100用户/gift_history_20220616031730.csv'
+# column_data = getTuHaoSendScene(file_path)
+# print(column_data)
+#
+# data_list = [column_data,column_data]
+#
+# df_save = pd.DataFrame(data_list)
+# save_path = '/Users/tuzhaoyang/Desktop/blecrash' + '/export.csv'
+# df_save.to_csv(save_path, encoding='utf_8_sig')

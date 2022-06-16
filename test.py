@@ -22,12 +22,15 @@ arr = df.to_numpy()
 
 
 
-def findIdxOfKey(key, arrar):
-    idx = 0
-    for x in arrar:
-        if x == key:
-            return idx
-        idx += 1
+# def findIdxOfKey(key, arrar):
+#     idx = 0
+#     for x in arrar:
+#         if x == key:
+#             return idx
+#         idx += 1
+#
+# indx = findIdxOfKey('送礼UID', se)
+# print(indx)
 
-indx = findIdxOfKey('送礼UID', se)
-print(indx)
+# file_path = '/Users/tuzhaoyang/Desktop/blecrash/充值TOP100用户/gift_history_20220616031730.csv'
+# print(file_path[-18:-4])
