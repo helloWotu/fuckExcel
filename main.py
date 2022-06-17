@@ -5,7 +5,7 @@ import recverPase
 import senderPase
 
 # paths = os.getcwd()
-paths = r'/Users/tuzhaoyang/Desktop/blecrash/充值TOP100用户'
+paths = r'/Users/tuzhaoyang/Desktop/crash/下滑TOP作为收礼人'
 columns = ['送礼人ID', '送礼人名字', '收礼人ID', '收礼人名字', '送礼总金额']
 
 
@@ -13,7 +13,9 @@ columns = ['送礼人ID', '送礼人名字', '收礼人ID', '收礼人名字', '
 def list_dir(file_dir):
     list_csv = []
     dir_list = os.listdir(file_dir)
-    dir_list.remove('.DS_Store')
+    if '.DS_Store' in dir_list:
+        dir_list.remove('.DS_Store')
+
     for dir_path in dir_list:
         if '_' not in dir_path:
             dir_list.remove(dir_path)
@@ -67,18 +69,18 @@ if __name__ == '__main__':
 
     for filePath in list_csv:
         # 土豪送给谁最多
-        # ret_recver = recverPase.getFirstSored(filePath)
-        # if len(ret_recver) > 0:
-        #     recver_list.append(ret_recver[0])
+        ret_recver = recverPase.getFirstSored(filePath)
+        if len(ret_recver) > 0:
+            recver_list.append(ret_recver[0])
 
         # 谁送给土豪最多
-        # ret_sender = senderPase.getFirstSored(filePath)
-        # if len(ret_sender) > 0:
-        #     sender_list.append(ret_sender[0])
+        ret_sender = senderPase.getFirstSored(filePath)
+        if len(ret_sender) > 0:
+            sender_list.append(ret_sender[0])
 
 
         ret_tuhao_sender_sence = recverPase.getTuHaoSendScene(filePath)
-        if ret_tuhao_sender_sence != None:
+        if '土豪uid' in ret_tuhao_sender_sence:
             tuhao_sender_sence_list.append(ret_tuhao_sender_sence)
 
     if len(sender_list) > 0:
@@ -98,5 +100,5 @@ if __name__ == '__main__':
         print(tuhao_sender_sence_list)
         tuhao_sender_sence_path = paths + '/土豪送礼场景分析.csv'
         df_save = pd.DataFrame(tuhao_sender_sence_list)
-        # df_save['土豪uid'] = df_save['土豪uid'].map(long_num_str)
+        df_save['土豪uid'] = df_save['土豪uid'].map(long_num_str)
         df_save.to_csv(tuhao_sender_sence_path, encoding='utf_8_sig')
